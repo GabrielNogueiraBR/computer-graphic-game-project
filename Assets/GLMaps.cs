@@ -13,45 +13,51 @@ public class GLMaps : MonoBehaviour
     public float personagemJogoX = 0;
     public float personagemJogoY = 0;
 
+    float larguraParede = 0.5f;
+    float larguraCaminho = 2.5f;
 
     public void Start() {
         sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+               
     }
 
 
     public void Update() {
         sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-
-        if(Input.GetKey(KeyCode.LeftArrow))
+        
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             horizontal = true;
             personagemJogoX -= velo;
             direcao = -1;
+            transform.position -= new Vector3(velo,0,0);
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             horizontal = true;
             personagemJogoX += velo;
             direcao = 1;
+            transform.position += new Vector3(velo, 0, 0);
         }
         if(Input.GetKey(KeyCode.UpArrow))
         {
             horizontal = false;
             personagemJogoY += velo;
             direcao = 1;
+            transform.position += new Vector3(0, velo, 0);
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
             horizontal = false;
             personagemJogoY -= velo;
             direcao = -1;
+            transform.position -= new Vector3(0, velo, 0);
         }
     }
 
     private void OnPostRender() {
 
-        BarDown();
-        BarRight();
+        CreateMap();
 
         if (horizontal)
             PersonagemJogo_Horizontal();
@@ -59,21 +65,55 @@ public class GLMaps : MonoBehaviour
             PersonagemJogo_Vertical();        
     }
 
+    void CreateMap()
+    {
+        CreateBorderMap();
+
+    }
+
+    void CreateBorderMap()
+    {
+        BarDown();
+
+    }
+
 
     void BarDown()
     {
+
         StartGL_Quads();
-
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        //mapa
-        GL.Vertex3(sb.x * (-1), sb.y * (-1), 0);
-        GL.Vertex3(sb.x * (-1), sb.y * (-1) + 1, 0);
-        GL.Vertex3(sb.x, sb.y * (-1) + 1, 0);
-        GL.Vertex3(sb.x, sb.y * (-1), 0);
+        GL.Vertex3(-21, 0, 0);
+        GL.Vertex3(-21, larguraParede, 0);
+        GL.Vertex3(0 - larguraCaminho, larguraParede, 0);
+        GL.Vertex3(0 - larguraCaminho, 0, 0);        
+        EndGLPopMatrix();
 
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        GL.Vertex3(-larguraCaminho - larguraParede, larguraParede, 0);
+        GL.Vertex3(-larguraCaminho , larguraParede, 0);
+        GL.Vertex3(-larguraCaminho , larguraParede + 7, 0);
+        GL.Vertex3(-larguraCaminho - larguraParede, larguraParede + 7, 0);
+        EndGLPopMatrix();
+
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));       
+        GL.Vertex3(-larguraCaminho - larguraParede, larguraParede + 7, 0);
+        GL.Vertex3(-larguraCaminho - larguraParede - 7, larguraParede + 7, 0);
+        GL.Vertex3(-larguraCaminho - larguraParede - 7, 7, 0);
+        GL.Vertex3(-larguraCaminho - larguraParede , 7, 0);
+        EndGLPopMatrix();
+
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        GL.Vertex3(14, 0, 0);
+        GL.Vertex3(14, larguraParede, 0);
+        GL.Vertex3(0 + larguraCaminho, larguraParede, 0);
+        GL.Vertex3(0 + larguraCaminho, 0, 0);
         EndGLPopMatrix();
     }
-       
+     
     void BarRight()
     {
         StartGL_Quads();
