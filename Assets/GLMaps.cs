@@ -32,21 +32,21 @@ public class GLMaps : MonoBehaviour
             direcao = -1;
             transform.position -= new Vector3(velo,0,0);
         }
-        if (Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.RightArrow))
         {
             horizontal = true;
             personagemJogoX += velo;
             direcao = 1;
             transform.position += new Vector3(velo, 0, 0);
         }
-        if(Input.GetKey(KeyCode.UpArrow))
+        else if(Input.GetKey(KeyCode.UpArrow))
         {
             horizontal = false;
             personagemJogoY += velo;
             direcao = 1;
             transform.position += new Vector3(0, velo, 0);
         }
-        if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.DownArrow))
         {
             horizontal = false;
             personagemJogoY -= velo;
@@ -74,6 +74,7 @@ public class GLMaps : MonoBehaviour
     void CreateBorderMap()
     {
         BarDown();
+        BarRight();
 
     }
 
@@ -107,6 +108,15 @@ public class GLMaps : MonoBehaviour
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        GL.Vertex3(0 + larguraCaminho, larguraParede, 0);
+        GL.Vertex3(0 + larguraCaminho + larguraParede, larguraParede, 0);
+        GL.Vertex3(0 + larguraCaminho + larguraParede, larguraParede + 14, 0);
+        GL.Vertex3(0 + larguraCaminho, larguraParede + 14, 0);
+        
+        EndGLPopMatrix();
+
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
         GL.Vertex3(14, 0, 0);
         GL.Vertex3(14, larguraParede, 0);
         GL.Vertex3(0 + larguraCaminho, larguraParede, 0);
@@ -117,13 +127,19 @@ public class GLMaps : MonoBehaviour
     void BarRight()
     {
         StartGL_Quads();
-
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(sb.x, sb.y * (-1), 0);
-        GL.Vertex3(sb.x, sb.y, 0);
-        GL.Vertex3(sb.x - 1, sb.y, 0);
-        GL.Vertex3(sb.x - 1, sb.y * (-1), 0);
+        GL.Vertex3(14, larguraParede, 0);
+        GL.Vertex3(14, larguraParede + 35, 0);
+        GL.Vertex3(14 - larguraParede, larguraParede + 35, 0);
+        GL.Vertex3(14 - larguraParede, larguraParede, 0);
+        EndGLPopMatrix();
 
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        GL.Vertex3(14 - larguraParede, larguraParede + 27, 0);
+        GL.Vertex3(14 - larguraParede - 7, larguraParede + 27, 0);
+        GL.Vertex3(14 - larguraParede - 7, larguraParede + 27 + larguraParede, 0);
+        GL.Vertex3(14 - larguraParede, larguraParede + 27 + larguraParede, 0);
         EndGLPopMatrix();
     }
 
