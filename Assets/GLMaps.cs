@@ -79,14 +79,64 @@ public class GLMaps : MonoBehaviour
 
     private bool ColisaoHorizontal()
     {
-        return ParedesMapa.Where(x => (personagemJogoY >= x.Vertice1.Y && personagemJogoY <= x.Vertice2.Y) 
-                                    && (personagemJogoX + (velo * direcao) >= x.Vertice1.X && personagemJogoX + (velo * direcao) <= x.Vertice3.X)).Any();
+        return ParedesMapa.Where(parede =>
+        {
+            Ponto v1 = parede.Vertice1;
+            Ponto v2;
+
+            if ((parede.Vertice1.Y != parede.Vertice2.Y) && (parede.Vertice1.X != parede.Vertice2.X))
+            {
+                v2 = parede.Vertice2;
+            }
+            else if ((parede.Vertice1.Y != parede.Vertice3.Y) && (parede.Vertice1.X != parede.Vertice3.X))
+            {
+                v2 = parede.Vertice3;
+            }
+            else
+            {
+                v2 = parede.Vertice4;
+            }
+
+            bool vertical = ((personagemJogoY >= v1.Y) && (personagemJogoY <= v2.Y)) || ((personagemJogoY >= v2.Y) && (personagemJogoY <= v1.Y));
+
+            bool horizontal = ((personagemJogoX + (velo * direcao) >= v1.X) && (personagemJogoX + (velo * direcao) <= v2.X)) || ((personagemJogoX + (velo * direcao) >= v2.X) && (personagemJogoX + (velo * direcao) <= v1.X));
+
+            if (vertical && horizontal)
+                return true;
+            return false;
+        }
+        ).Any();
     }
 
     private bool ColisaoVertical()
     {
-        return ParedesMapa.Where(x => (personagemJogoY + (velo * direcao) >= x.Vertice1.Y && personagemJogoY + (velo * direcao) <= x.Vertice2.Y)
-                                    && (personagemJogoX >= x.Vertice1.X && personagemJogoX <= x.Vertice3.X)).Any();
+        return ParedesMapa.Where(parede =>
+        {
+            Ponto v1 = parede.Vertice1;
+            Ponto v2;
+
+            if ((parede.Vertice1.Y != parede.Vertice2.Y) && (parede.Vertice1.X != parede.Vertice2.X))
+            {
+                v2 = parede.Vertice2;
+            }
+            else if ((parede.Vertice1.Y != parede.Vertice3.Y) && (parede.Vertice1.X != parede.Vertice3.X))
+            {
+                v2 = parede.Vertice3;
+            }
+            else
+            {
+                v2 = parede.Vertice4;
+            }
+
+            bool vertical = ((personagemJogoY + (velo * direcao) >= v1.Y) && (personagemJogoY + (velo * direcao) <= v2.Y)) || ((personagemJogoY + (velo * direcao) >= v2.Y) && (personagemJogoY + (velo * direcao) <= v1.Y));
+
+            bool horizontal = ((personagemJogoX >= v1.X) && (personagemJogoX  <= v2.X)) || ((personagemJogoX  >= v2.X) && (personagemJogoX  <= v1.X));
+
+            if (vertical && horizontal)
+                return true;
+            return false;
+        }
+        ).Any();
     }
 
     private void OnPostRender() {
@@ -116,8 +166,10 @@ public class GLMaps : MonoBehaviour
 
     void BarDown(float x, float y, float z)
     {
-       
+
+        #region ParedeUnidade1
         Parede ParedeUnidade1 = new Parede();
+        ParedeUnidade1.Sentido = Sentido.Horizontal;
         Ponto ponto = new Ponto(x,y);
         
         StartGL_Quads();
@@ -139,19 +191,35 @@ public class GLMaps : MonoBehaviour
         
         EndGLPopMatrix();
         ParedesMapa.Add(ParedeUnidade1);
+        #endregion
         
 
         #region ParedeUnidade2
         Parede ParedeUnidade2 = new Parede();
+        ParedeUnidade2.Sentido = Sentido.Vertical;
+        Ponto ponto2 = new Ponto(x, y);
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
 
-        GL.Vertex3(-larguraCaminho - larguraParede, larguraParede, 0);
-        GL.Vertex3(-larguraCaminho, larguraParede, 0);
-        GL.Vertex3(-larguraCaminho, larguraParede + 7, 0);
-        GL.Vertex3(-larguraCaminho - larguraParede, larguraParede + 7, 0);
+        ponto2.addX(-larguraCaminho - larguraParede);
+        ponto2.addY(larguraParede);
+        ParedeUnidade2.AdicionarVertice1(ponto2);
+
+        ponto2.addX(+larguraParede);
+        ParedeUnidade2.AdicionarVertice2(ponto2);
+
+        ponto2.addY(7);
+        ParedeUnidade2.AdicionarVertice3(ponto2);
+
+        ponto2.addX(-larguraParede);
+        ParedeUnidade2.AdicionarVertice4(ponto2);
+
+        ParedeUnidade2.CriarParede();
+        
         EndGLPopMatrix();
+        ParedesMapa.Add(ParedeUnidade2);
+
         #endregion
 
 
@@ -171,13 +239,33 @@ public class GLMaps : MonoBehaviour
         GL.Vertex3(0 + larguraCaminho, larguraParede + 14, 0);        
         EndGLPopMatrix();
 
+        #region ParedeUnidade5
+        Parede ParedeUnidade5 = new Parede();
+        ParedeUnidade5.Sentido = Sentido.Vertical;
+        Ponto ponto5 = new Ponto(x, y);
+
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(14, 0, 0);
-        GL.Vertex3(14, larguraParede, 0);
-        GL.Vertex3(0 + larguraCaminho, larguraParede, 0);
-        GL.Vertex3(0 + larguraCaminho, 0, 0);
+
+        ponto5.addX(14);
+        ParedeUnidade5.AdicionarVertice1(ponto5);
+
+        ponto5.addY(larguraParede);
+        ParedeUnidade5.AdicionarVertice2(ponto5);
+
+        ponto5.addX(larguraCaminho - 14);
+        ParedeUnidade5.AdicionarVertice3(ponto5);
+
+        ponto5.addY(-larguraParede);
+        ParedeUnidade5.AdicionarVertice4(ponto5);
+
+        ParedeUnidade5.CriarParede();
+
         EndGLPopMatrix();
+        ParedesMapa.Add(ParedeUnidade5);
+        #endregion
+
+        
     }
      
     void BarRight()
