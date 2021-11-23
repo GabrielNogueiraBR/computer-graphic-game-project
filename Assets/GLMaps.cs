@@ -191,8 +191,7 @@ public class GLMaps : MonoBehaviour
         
         EndGLPopMatrix();
         ParedesMapa.Add(ParedeUnidade1);
-        #endregion
-        
+        #endregion        
 
         #region ParedeUnidade2
         Parede ParedeUnidade2 = new Parede();
@@ -222,23 +221,48 @@ public class GLMaps : MonoBehaviour
 
         #endregion
 
+        #region ParedeUnidade3
+        Parede ParedeUnidade3 = new Parede();
+        ParedeUnidade3.Sentido = Sentido.Horizontal;
 
-        StartGL_Quads();
-        GL.Color(new Color(0.33f, 0.47f, 0.23f));       
-        GL.Vertex3(-larguraCaminho - larguraParede, larguraParede + 7, 0);
-        GL.Vertex3(-larguraCaminho - larguraParede - 7, larguraParede + 7, 0);
-        GL.Vertex3(-larguraCaminho - larguraParede - 7, 7, 0);
-        GL.Vertex3(-larguraCaminho - larguraParede , 7, 0);
-        EndGLPopMatrix();
+        Ponto ponto3 = new Ponto(x, y);
+
+        ponto3.addX(-larguraCaminho - larguraParede);
+        ponto3.addY(larguraParede + 7);
+        ParedeUnidade3.AdicionarVertice1(ponto3);
+
+        ponto3.addX(-7);
+        ParedeUnidade3.AdicionarVertice2(ponto3);
+
+        ponto3.addY(-larguraParede);
+        ParedeUnidade3.AdicionarVertice3(ponto3);
+
+        ponto3.addX(+7);
+        ParedeUnidade3.AdicionarVertice4(ponto3);
+
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(0 + larguraCaminho, larguraParede, 0);
-        GL.Vertex3(0 + larguraCaminho + larguraParede, larguraParede, 0);
-        GL.Vertex3(0 + larguraCaminho + larguraParede, larguraParede + 14, 0);
-        GL.Vertex3(0 + larguraCaminho, larguraParede + 14, 0);        
+        ParedeUnidade3.CriarParede();
         EndGLPopMatrix();
 
+        ParedesMapa.Add(ParedeUnidade3);
+        #endregion
+
+        #region ParedeUnidade4
+        Parede ParedeUnidade4 = new Parede();
+        ParedeUnidade4.Sentido = Sentido.Vertical;
+
+        ParedeUnidade4.AdicionaVertices(x + larguraCaminho, x + larguraCaminho + larguraParede, larguraParede, larguraParede + 14);
+
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        ParedeUnidade4.CriarParede();
+        EndGLPopMatrix();
+
+        ParedesMapa.Add(ParedeUnidade4);
+        #endregion
+              
         #region ParedeUnidade5
         Parede ParedeUnidade5 = new Parede();
         ParedeUnidade5.Sentido = Sentido.Vertical;
@@ -264,148 +288,155 @@ public class GLMaps : MonoBehaviour
         EndGLPopMatrix();
         ParedesMapa.Add(ParedeUnidade5);
         #endregion
-
-        
     }
      
     void BarRight()
     {
-        StartGL_Quads();
-        GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(14, larguraParede, 0);
-        GL.Vertex3(14, larguraParede + 35, 0);
-        GL.Vertex3(14 - larguraParede, larguraParede + 35, 0);
-        GL.Vertex3(14 - larguraParede, larguraParede, 0);
-        EndGLPopMatrix();
+        #region ParedeUnidade1
+        Parede ParedeUnidade1 = new Parede();
+        ParedeUnidade1.AdicionaVertices(14,14-larguraParede,larguraParede,larguraParede+35);
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(14 - larguraParede, larguraParede + 27, 0);
-        GL.Vertex3(14 - larguraParede - 7, larguraParede + 27, 0);
-        GL.Vertex3(14 - larguraParede - 7, larguraParede + 27 + larguraParede, 0);
-        GL.Vertex3(14 - larguraParede, larguraParede + 27 + larguraParede, 0);
+        ParedeUnidade1.CriarParede();
         EndGLPopMatrix();
+
+        ParedesMapa.Add(ParedeUnidade1);
+        #endregion
+
+        Parede ParedeUnidade2 = new Parede();
+        ParedeUnidade2.AdicionaVertices(14 - larguraParede, 14 - larguraParede - 7, larguraParede + 27, larguraParede + 27 + larguraParede);
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        ParedeUnidade2.CriarParede();
+        EndGLPopMatrix();
+        ParedesMapa.Add(ParedeUnidade2);
     }
 
     void BarLeft()
     {
-        StartGL_Quads();
-        GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(-21, larguraParede, 0);
-        GL.Vertex3(-21 + larguraParede, larguraParede, 0);
-        GL.Vertex3(-21 + larguraParede, larguraParede + 35, 0);
-        GL.Vertex3(-21, larguraParede + 35, 0);
-        EndGLPopMatrix();
+        Parede ParedeUnidade1 = new Parede();
+        ParedeUnidade1.AdicionaVertices(-21,-21+larguraParede,larguraParede,larguraParede+35);
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(-21 + larguraParede, larguraParede + 13, 0);
-        GL.Vertex3(-21 + larguraParede, larguraParede + 13 + larguraParede, 0);
-        GL.Vertex3(-21 + larguraParede + 11, larguraParede + 13 + larguraParede, 0);
-        GL.Vertex3(-21 + larguraParede + 11, larguraParede + 13, 0);
+        ParedeUnidade1.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(ParedeUnidade1);
+
+        Parede ParedeUnidade2 = new Parede();
+        ParedeUnidade2.AdicionaVertices(-21 + larguraParede, -21 + larguraParede + 11, larguraParede + 13, larguraParede + 13 + larguraParede);
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(-21 + larguraParede + 5, larguraParede + 13, 0);
-        GL.Vertex3(-21 + larguraParede + 5, larguraParede + 13 - 6 - larguraParede, 0);
-        GL.Vertex3(-21 + larguraParede + 5 + larguraParede, larguraParede + 13 - 6 - larguraParede, 0);
-        GL.Vertex3(-21 + larguraParede + 5 + larguraParede, larguraParede + 13, 0);
+        ParedeUnidade2.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(ParedeUnidade2);
+
+        Parede ParedeUnidade3 = new Parede();
+        ParedeUnidade3.AdicionaVertices(-21 + larguraParede + 5, -21 + larguraParede + 5 + larguraParede, larguraParede + 13, larguraParede + 13 - 6 - larguraParede);
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(-21 + 11, larguraParede + 13 + larguraParede, 0);
-        GL.Vertex3(-21 + 11 + larguraParede, larguraParede + 13 + larguraParede, 0);
-        GL.Vertex3(-21 + 11 + larguraParede, larguraParede + 13 + larguraParede + 7, 0);
-        GL.Vertex3(-21 + 11, larguraParede + 13 + larguraParede + 7, 0);
+        ParedeUnidade3.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(ParedeUnidade3);
+
+        Parede ParedeUnidade4 = new Parede();
+        ParedeUnidade4.AdicionaVertices(-21 + 11, -21 + 11 + larguraParede, larguraParede + 13 + larguraParede, larguraParede + 13 + larguraParede + 7);
+        
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        ParedeUnidade4.CriarParede();
+        EndGLPopMatrix();
+        ParedesMapa.Add(ParedeUnidade4);
 
     }
 
     void BarTop()
     {
+
+        Parede p;
+
+        p = new Parede();
+        p.AdicionaVertices(-21 + larguraParede, -21 + larguraParede + 14 - larguraCaminho, 35, 35 + larguraParede);
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(-21 + larguraParede, 35, 0);
-        GL.Vertex3(-21 + larguraParede, 35 + larguraParede, 0);
-        GL.Vertex3(-21 + larguraParede + 14 - larguraCaminho, 35 + larguraParede, 0);
-        GL.Vertex3(-21 + larguraParede + 14 - larguraCaminho, 35, 0);
+        p.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(p);
 
-        StartGL_Quads();
-        GL.Color(new Color(0.33f, 0.47f, 0.23f));        
-        GL.Vertex3(14 - larguraParede, 35, 0);
-        GL.Vertex3(14 - larguraParede, 35 + larguraParede, 0);
-        GL.Vertex3(14 - larguraParede -20 + larguraCaminho, 35 + larguraParede, 0);
-        GL.Vertex3(14 - larguraParede -20 + larguraCaminho, 35, 0);        
-        EndGLPopMatrix();
-
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede, 14 - larguraParede - 20 + larguraCaminho, 35, 35 + larguraParede);
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(14 - larguraParede - 13, 35, 0);
-        GL.Vertex3(14 - larguraParede - 13 - larguraParede, 35, 0);
-        GL.Vertex3(14 - larguraParede - 13 - larguraParede, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13, 35 - 14, 0);
+        p.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(p);
 
-        StartGL_Quads();
-        GL.Color(new Color(0.33f, 0.47f, 0.23f));       
-        GL.Vertex3(14 - larguraParede - 13 - larguraParede, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 - larguraParede - 5, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 - larguraParede - 5, 35 - 14 + larguraParede, 0);
-        GL.Vertex3(14 - larguraParede - 13 - larguraParede, 35 - 14 + larguraParede, 0);        
-        EndGLPopMatrix();
-
-        StartGL_Quads();
-        GL.Color(new Color(0.33f, 0.47f, 0.23f));        
-        GL.Vertex3(14 - larguraParede - 13 - 5, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede, 35 - 14 - 7, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5, 35 - 14 - 7, 0);                
-        EndGLPopMatrix();
-
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede - 13, 14 - larguraParede - 13 - larguraParede, 35, 35 - 14);
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(14 - larguraParede - 13 - 5, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede, 35 - 14 + 7, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5, 35 - 14 + 7, 0);
+        p.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(p);
 
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede - 13 - larguraParede, 14 - larguraParede - 13 - larguraParede - 5, 35 - 14, 35 - 14 + larguraParede);
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede, 35 - 14 + 7, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede - 10, 35 - 14 + 7, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede - 10, 35 - 14 + 7 - larguraParede, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede, 35 - 14 + 7 - larguraParede, 0);        
+        p.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(p);
 
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede - 13 - 5, 14 - larguraParede - 13 - 5 - larguraParede, 35 - 14, 35 - 14 - 7);
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede - 10, 35 - 14 + 7 - larguraParede, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - 10, 35 - 14 + 7 - larguraParede, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - 10, 35 - 14 + 7 - larguraParede -6, 0);
-        GL.Vertex3(14 - larguraParede - 13 - 5 - larguraParede - 10, 35 - 14 + 7 - larguraParede -6, 0);        
+        p.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(p);
 
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede - 13 - 5, 14 - larguraParede - 13 - 5 - larguraParede, 35 - 14, 35 - 14 + 7);
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(14 - larguraParede - 13, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 + 8, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 + 8, 35 - 14 + larguraParede, 0);
-        GL.Vertex3(14 - larguraParede - 13, 35 - 14 + larguraParede, 0);        
+        p.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(p);
 
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede - 13 - 5 - larguraParede, 14 - larguraParede - 13 - 5 - larguraParede - 10, 35 - 14 + 7, 35 - 14 + 7 - larguraParede);
         StartGL_Quads();
-        GL.Color(new Color(0.33f, 0.47f, 0.23f));        
-        GL.Vertex3(14 - larguraParede - 13 + 8, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 + 8 - larguraParede, 35 - 14, 0);
-        GL.Vertex3(14 - larguraParede - 13 + 8 - larguraParede, 35 - 14 - 12, 0);
-        GL.Vertex3(14 - larguraParede - 13 + 8, 35 - 14 - 12, 0);        
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        p.CriarParede();
         EndGLPopMatrix();
+        ParedesMapa.Add(p);
 
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede - 13 - 5 - larguraParede - 10, 14 - larguraParede - 13 - 5 - 10, 35 - 14 + 7 - larguraParede, 35 - 14 + 7 - larguraParede - 6);
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        p.CriarParede();
+        EndGLPopMatrix();
+        ParedesMapa.Add(p);
 
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede - 13, 14 - larguraParede - 13 + 8, 35 - 14, 35 - 14 + larguraParede);
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        p.CriarParede();
+        EndGLPopMatrix();
+        ParedesMapa.Add(p);
+
+        p = new Parede();
+        p.AdicionaVertices(14 - larguraParede - 13 + 8, 14 - larguraParede - 13 + 8 - larguraParede, 35 - 14, 35 - 14 - 12);
+        StartGL_Quads();
+        GL.Color(new Color(0.33f, 0.47f, 0.23f));
+        p.CriarParede();
+        EndGLPopMatrix();
+        ParedesMapa.Add(p);
     }
 
     private void PersonagemJogo_Vertical()
@@ -639,6 +670,14 @@ public class Parede
 
     public void AdicionarVertice4(float x, float y) => Vertice4 = new Ponto(x, y);
     public void AdicionarVertice4(Ponto ponto) => Vertice4 = new Ponto(ponto);
+
+    public void AdicionaVertices(float x1, float x2, float y1, float y2)
+    {
+        Vertice1 = new Ponto(x1, y1);
+        Vertice2 = new Ponto(x1, y2);
+        Vertice3 = new Ponto(x2, y2);
+        Vertice4 = new Ponto(x2, y1);
+    }
 
     public void CriarParede()
     {
