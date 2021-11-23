@@ -9,7 +9,7 @@ public class GLMaps : MonoBehaviour
     public Material mat;
     public Vector2 sb;
     float velo = 0.03f;
-    float direcao = 1;
+    public float direcao = 1;
     public Sentido sentidoMovimentacao = Sentido.Horizontal;
     private float proportion = 0.1f;
     public float personagemJogoX = 0;
@@ -18,6 +18,10 @@ public class GLMaps : MonoBehaviour
 
     float larguraParede = 0.5f;
     float larguraCaminho = 2.5f;
+
+    public float coordenadaInicialX = 0;
+    public float coordenadaInicialY = 0;
+    public float coordenadaInicialZ = 0;
 
     public void Start() {
         sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
@@ -31,36 +35,57 @@ public class GLMaps : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             sentidoMovimentacao = Sentido.Horizontal;
-            personagemJogoX -= velo;
             direcao = -1;
-            transform.position -= new Vector3(velo,0,0);
+            if (!ColisaoHorizontal())
+            {
+                personagemJogoX -= velo;
+                transform.position -= new Vector3(velo,0,0);
+            }
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
             sentidoMovimentacao = Sentido.Horizontal;
-            personagemJogoX += velo;
             direcao = 1;
-            transform.position += new Vector3(velo, 0, 0);
+
+            if (!ColisaoHorizontal())
+            {
+                personagemJogoX += velo;
+                transform.position += new Vector3(velo, 0, 0);
+            }
         }
-        else if(Input.GetKey(KeyCode.UpArrow) && !ColisaoHorizontal())
+        else if(Input.GetKey(KeyCode.UpArrow))
         {
             sentidoMovimentacao = Sentido.Vertical;
-            personagemJogoY += velo;
             direcao = 1;
-            transform.position += new Vector3(0, velo, 0);
+
+            if (!ColisaoVertical())
+            {
+                personagemJogoY += velo;
+                transform.position += new Vector3(0, velo, 0);
+            }
         }
-        else if (Input.GetKey(KeyCode.DownArrow) && !ColisaoHorizontal())
+        else if (Input.GetKey(KeyCode.DownArrow))
         {
             sentidoMovimentacao = Sentido.Vertical;
-            personagemJogoY -= velo;
             direcao = -1;
-            transform.position -= new Vector3(0, velo, 0);
+
+            if (!ColisaoVertical())
+            {
+                personagemJogoY -= velo;
+                transform.position -= new Vector3(0, velo, 0);
+            }
         }
     }
 
     private bool ColisaoHorizontal()
     {
         return ParedesMapa.Where(x => (personagemJogoY >= x.Vertice1.Y && personagemJogoY <= x.Vertice2.Y) 
+                                    && (personagemJogoX + (velo * direcao) >= x.Vertice1.X && personagemJogoX + (velo * direcao) <= x.Vertice3.X)).Any();
+    }
+
+    private bool ColisaoVertical()
+    {
+        return ParedesMapa.Where(x => (personagemJogoY + (velo * direcao) >= x.Vertice1.Y && personagemJogoY + (velo * direcao) <= x.Vertice2.Y)
                                     && (personagemJogoX >= x.Vertice1.X && personagemJogoX <= x.Vertice3.X)).Any();
     }
 
@@ -82,30 +107,39 @@ public class GLMaps : MonoBehaviour
 
     void CreateBorderMap()
     {
-        BarDown();
+        BarDown(coordenadaInicialX,coordenadaInicialY,coordenadaInicialZ);
         BarRight();
         BarLeft();
         BarTop();
 
     }
 
-    void BarDown()
+    void BarDown(float x, float y, float z)
     {
         Parede ParedeUnidade = new Parede();
-
+        
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
-        GL.Vertex3(-21, 0, 0);
-        GL.Vertex3(-21, larguraParede, 0);
-        GL.Vertex3(0 - larguraCaminho, larguraParede, 0);
-        GL.Vertex3(0 - larguraCaminho, 0, 0);
-        EndGLPopMatrix();
+        
+        x -= 21;
+        GL.Vertex3(x, y, z);
+        ParedeUnidade.AdicionarVertice1(x, y);
 
-        ParedeUnidade.AdicionarVertice1(-21, 0);
-        ParedeUnidade.AdicionarVertice2(-21, larguraParede);
-        ParedeUnidade.AdicionarVertice3(0 - larguraCaminho, larguraParede);
-        ParedeUnidade.AdicionarVertice4(0 - larguraCaminho, 0);
-        ParedeUnidade.Sentido = Sentido.Horizontal;
+        y += larguraParede;
+        GL.Vertex3(x, y, z);
+        ParedeUnidade.AdicionarVertice2(x, y);
+
+
+        x += (21 - larguraCaminho);
+        GL.Vertex3(x, y, z);
+        ParedeUnidade.AdicionarVertice3(x, y);
+
+        y -= larguraParede;
+        GL.Vertex3(x, y, z);
+        ParedeUnidade.AdicionarVertice4(x, y);
+        
+        EndGLPopMatrix();
+                      
 
         ParedesMapa.Add(ParedeUnidade);
 
