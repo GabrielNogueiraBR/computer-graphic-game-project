@@ -1,17 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GLMaps : MonoBehaviour
 {
     public Material mat;
     public Vector2 sb;
-    float velo = 0.01f;
+    float velo = 0.03f;
     float direcao = 1;
-    public bool horizontal = true;
+    public Sentido sentidoMovimentacao = Sentido.Horizontal;
     private float proportion = 0.1f;
     public float personagemJogoX = 0;
     public float personagemJogoY = 0;
+    public List<Parede> ParedesMapa = new List<Parede>();
 
     float larguraParede = 0.5f;
     float larguraCaminho = 2.5f;
@@ -27,39 +30,45 @@ public class GLMaps : MonoBehaviour
         
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            horizontal = true;
+            sentidoMovimentacao = Sentido.Horizontal;
             personagemJogoX -= velo;
             direcao = -1;
             transform.position -= new Vector3(velo,0,0);
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            horizontal = true;
+            sentidoMovimentacao = Sentido.Horizontal;
             personagemJogoX += velo;
             direcao = 1;
             transform.position += new Vector3(velo, 0, 0);
         }
-        else if(Input.GetKey(KeyCode.UpArrow))
+        else if(Input.GetKey(KeyCode.UpArrow) && !ColisaoHorizontal())
         {
-            horizontal = false;
+            sentidoMovimentacao = Sentido.Vertical;
             personagemJogoY += velo;
             direcao = 1;
             transform.position += new Vector3(0, velo, 0);
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.DownArrow) && !ColisaoHorizontal())
         {
-            horizontal = false;
+            sentidoMovimentacao = Sentido.Vertical;
             personagemJogoY -= velo;
             direcao = -1;
             transform.position -= new Vector3(0, velo, 0);
         }
     }
 
+    private bool ColisaoHorizontal()
+    {
+        return ParedesMapa.Where(x => (personagemJogoY >= x.Vertice1.Y && personagemJogoY <= x.Vertice2.Y) 
+                                    && (personagemJogoX >= x.Vertice1.X && personagemJogoX <= x.Vertice3.X)).Any();
+    }
+
     private void OnPostRender() {
 
         CreateMap();
 
-        if (horizontal)
+        if (sentidoMovimentacao == Sentido.Horizontal)
             PersonagemJogo_Horizontal();
         else
             PersonagemJogo_Vertical();        
@@ -80,23 +89,31 @@ public class GLMaps : MonoBehaviour
 
     }
 
-
     void BarDown()
     {
+        Parede ParedeUnidade = new Parede();
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
         GL.Vertex3(-21, 0, 0);
         GL.Vertex3(-21, larguraParede, 0);
         GL.Vertex3(0 - larguraCaminho, larguraParede, 0);
-        GL.Vertex3(0 - larguraCaminho, 0, 0);        
+        GL.Vertex3(0 - larguraCaminho, 0, 0);
         EndGLPopMatrix();
+
+        ParedeUnidade.AdicionarVertice1(-21, 0);
+        ParedeUnidade.AdicionarVertice2(-21, larguraParede);
+        ParedeUnidade.AdicionarVertice3(0 - larguraCaminho, larguraParede);
+        ParedeUnidade.AdicionarVertice4(0 - larguraCaminho, 0);
+        ParedeUnidade.Sentido = Sentido.Horizontal;
+
+        ParedesMapa.Add(ParedeUnidade);
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
         GL.Vertex3(-larguraCaminho - larguraParede, larguraParede, 0);
-        GL.Vertex3(-larguraCaminho , larguraParede, 0);
-        GL.Vertex3(-larguraCaminho , larguraParede + 7, 0);
+        GL.Vertex3(-larguraCaminho, larguraParede, 0);
+        GL.Vertex3(-larguraCaminho, larguraParede + 7, 0);
         GL.Vertex3(-larguraCaminho - larguraParede, larguraParede + 7, 0);
         EndGLPopMatrix();
 
@@ -461,4 +478,51 @@ public class GLMaps : MonoBehaviour
         GL.End();
         GL.PopMatrix();
     }
+}
+
+public class Parede
+{
+    public Ponto Vertice1 { get; set; }
+    public Ponto Vertice2 { get; set; }
+    public Ponto Vertice3 { get; set; }
+    public Ponto Vertice4 { get; set; }
+    public Sentido Sentido { get; set; }
+
+    public Parede()
+    {
+
+    }
+
+    public Parede(Ponto vertice1, Ponto vertice2, Ponto vertice3, Ponto vertice4, Sentido sentido)
+    {
+        Vertice1 = vertice1;
+        Vertice2 = vertice2;
+        Vertice3 = vertice3;
+        Vertice4 = vertice4;
+        Sentido = sentido;
+    }
+
+    public void AdicionarVertice1(float x, float y) => Vertice1 = new Ponto(x, y);
+    public void AdicionarVertice2(float x, float y) => Vertice2 = new Ponto(x, y);
+    public void AdicionarVertice3(float x, float y) => Vertice3 = new Ponto(x, y);
+    public void AdicionarVertice4(float x, float y) => Vertice4 = new Ponto(x, y);
+}
+
+public class Ponto
+{    
+    public float X { get; set; }
+    public float Y { get; set; }
+
+    public Ponto(float x, float y)
+    {
+        X = x;
+        Y = y;
+    }
+
+}
+
+public enum Sentido
+{
+    Horizontal,
+    Vertical
 }
