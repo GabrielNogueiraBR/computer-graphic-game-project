@@ -116,40 +116,44 @@ public class GLMaps : MonoBehaviour
 
     void BarDown(float x, float y, float z)
     {
-        Parede ParedeUnidade = new Parede();
+       
+        Parede ParedeUnidade1 = new Parede();
+        Ponto ponto = new Ponto(x,y);
         
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
         
-        x -= 21;
-        GL.Vertex3(x, y, z);
-        ParedeUnidade.AdicionarVertice1(x, y);
+        ponto.addX(-21);        
+        ParedeUnidade1.AdicionarVertice1(ponto);
 
-        y += larguraParede;
-        GL.Vertex3(x, y, z);
-        ParedeUnidade.AdicionarVertice2(x, y);
+        ponto.addY(larguraParede);       
+        ParedeUnidade1.AdicionarVertice2(ponto);
 
+        ponto.addX(21 - larguraCaminho);        
+        ParedeUnidade1.AdicionarVertice3(ponto);
 
-        x += (21 - larguraCaminho);
-        GL.Vertex3(x, y, z);
-        ParedeUnidade.AdicionarVertice3(x, y);
+        ponto.addY(-larguraParede);        
+        ParedeUnidade1.AdicionarVertice4(ponto);
 
-        y -= larguraParede;
-        GL.Vertex3(x, y, z);
-        ParedeUnidade.AdicionarVertice4(x, y);
+        ParedeUnidade1.CriarParede();
         
         EndGLPopMatrix();
-                      
+        ParedesMapa.Add(ParedeUnidade1);
+        
 
-        ParedesMapa.Add(ParedeUnidade);
+        #region ParedeUnidade2
+        Parede ParedeUnidade2 = new Parede();
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));
+
         GL.Vertex3(-larguraCaminho - larguraParede, larguraParede, 0);
         GL.Vertex3(-larguraCaminho, larguraParede, 0);
         GL.Vertex3(-larguraCaminho, larguraParede + 7, 0);
         GL.Vertex3(-larguraCaminho - larguraParede, larguraParede + 7, 0);
         EndGLPopMatrix();
+        #endregion
+
 
         StartGL_Quads();
         GL.Color(new Color(0.33f, 0.47f, 0.23f));       
@@ -537,9 +541,25 @@ public class Parede
     }
 
     public void AdicionarVertice1(float x, float y) => Vertice1 = new Ponto(x, y);
+    public void AdicionarVertice1(Ponto ponto) => Vertice1 = new Ponto(ponto);
+
     public void AdicionarVertice2(float x, float y) => Vertice2 = new Ponto(x, y);
+    public void AdicionarVertice2(Ponto ponto) => Vertice2 = new Ponto(ponto);
+
     public void AdicionarVertice3(float x, float y) => Vertice3 = new Ponto(x, y);
+    public void AdicionarVertice3(Ponto ponto) => Vertice3 = new Ponto(ponto);
+
     public void AdicionarVertice4(float x, float y) => Vertice4 = new Ponto(x, y);
+    public void AdicionarVertice4(Ponto ponto) => Vertice4 = new Ponto(ponto);
+
+    public void CriarParede()
+    {
+        GL.Vertex3(Vertice1.X, Vertice1.Y, 0);
+        GL.Vertex3(Vertice2.X, Vertice2.Y, 0);
+        GL.Vertex3(Vertice3.X, Vertice3.Y, 0);
+        GL.Vertex3(Vertice4.X, Vertice4.Y, 0);
+        
+    }
 }
 
 public class Ponto
@@ -551,6 +571,22 @@ public class Ponto
     {
         X = x;
         Y = y;
+    }
+
+    public Ponto(Ponto ponto)
+    {
+        this.X = ponto.X;
+        this.Y = ponto.Y;
+    }
+
+    public void addX(float value)
+    {
+        this.X += value;
+    }
+
+    public void addY(float value)
+    {
+        this.Y += value;
     }
 
 }
