@@ -36,6 +36,17 @@ public class GLMaps : MonoBehaviour
     public void Start() {
         sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         txtTempo.text = menorTempo.ToString();
+
+        #region Chegada
+        Parede C = new Parede();
+        C.AdicionaVertices(-21 + larguraParede + 14 - larguraCaminho, 14 - larguraParede - 20 + larguraCaminho, 35, 35 + larguraParede);
+        C.DefineCoordenadasIniciais(coordenadaInicialX, coordenadaInicialY);
+        StartGL_Quads();
+        GL.Color(new Color(177 / 255f, 129 / 255f, 73 / 255f));
+        C.CriarParede();
+        EndGLPopMatrix();
+        Chegada = C;
+        #endregion
     }
 
     public void FixedUpdate() {
@@ -423,17 +434,7 @@ public class GLMaps : MonoBehaviour
     void BarTop(float x, float y, float z)
     {
 
-        #region Chegada
-        Parede C = new Parede();
-        C.AdicionaVertices(-21 + larguraParede + 14 - larguraCaminho, 14 - larguraParede - 20 + larguraCaminho, 35, 35 + larguraParede);
-        C.DefineCoordenadasIniciais(x, y);
-        StartGL_Quads();
-        GL.Color(new Color(177/255f, 129/255f, 73/255f));
-        C.CriarParede();
-        EndGLPopMatrix();
-        Chegada = C;
-
-        #endregion
+        
 
         Parede p;
 
