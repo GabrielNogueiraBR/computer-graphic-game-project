@@ -8,16 +8,13 @@ public class GLMaps : MonoBehaviour
 {
     public Material mat;
     public Vector2 sb;
-    
-    float velo = 0.1f;
-    float direcao = 1;
+    float velo = 0.03f;
+    public float direcao = 1;
     Sentido sentidoMovimentacao = Sentido.Vertical;
     private float proportion = 0.1f;
-    float personagemJogoX = 0;
-    float personagemJogoY = 0;
-
+    public float personagemJogoX = 0;
+    public float personagemJogoY = 0;
     public List<Parede> ParedesMapa = new List<Parede>();
-    public Parede Chegada;
 
     float larguraParede = 1f;
     float larguraCaminho = 2.5f;
@@ -30,7 +27,7 @@ public class GLMaps : MonoBehaviour
         sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));      
     }
 
-    public void FixedUpdate() {
+    public void Update() {
         sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
        
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -40,7 +37,7 @@ public class GLMaps : MonoBehaviour
             if (!ColisaoHorizontal())
             {
                 personagemJogoX -= velo;
-                transform.position = new Vector3(personagemJogoX, personagemJogoY, -10);
+                transform.position -= new Vector3(velo,0,0);
             }
         }
         else if (Input.GetKey(KeyCode.RightArrow))
@@ -51,7 +48,7 @@ public class GLMaps : MonoBehaviour
             if (!ColisaoHorizontal())
             {
                 personagemJogoX += velo;
-                transform.position = new Vector3(personagemJogoX, personagemJogoY, -10);
+                transform.position += new Vector3(velo, 0, 0);
             }
         }
         else if(Input.GetKey(KeyCode.UpArrow))
@@ -62,7 +59,7 @@ public class GLMaps : MonoBehaviour
             if (!ColisaoVertical())
             {
                 personagemJogoY += velo;
-                transform.position = new Vector3(personagemJogoX, personagemJogoY, -10);
+                transform.position += new Vector3(0, velo, 0);
             }
         }
         else if (Input.GetKey(KeyCode.DownArrow))
@@ -73,16 +70,8 @@ public class GLMaps : MonoBehaviour
             if (!ColisaoVertical())
             {
                 personagemJogoY -= velo;
-                transform.position = new Vector3(personagemJogoX, personagemJogoY, -10);
+                transform.position -= new Vector3(0, velo, 0);
             }
-        }
-
-        if (ColisaoChegada())
-        {
-            personagemJogoX = 0;
-            personagemJogoY = 0;
-
-            transform.position = new Vector3(personagemJogoX, personagemJogoY, -10);
         }
     }
 
@@ -148,35 +137,6 @@ public class GLMaps : MonoBehaviour
         ).Any();
     }
 
-    private bool ColisaoChegada()
-    {
-        Ponto v1 = Chegada.Vertice1;
-        Ponto v2;
-
-        if ((Chegada.Vertice1.Y != Chegada.Vertice2.Y) && (Chegada.Vertice1.X != Chegada.Vertice2.X))
-        {
-            v2 = Chegada.Vertice2;
-        }
-        else if ((Chegada.Vertice1.Y != Chegada.Vertice3.Y) && (Chegada.Vertice1.X != Chegada.Vertice3.X))
-        {
-            v2 = Chegada.Vertice3;
-        }
-        else
-        {
-            v2 = Chegada.Vertice4;
-        }
-
-        bool vertical = ((personagemJogoY >= v1.Y) && (personagemJogoY <= v2.Y)) || ((personagemJogoY >= v2.Y) && (personagemJogoY <= v1.Y));
-
-        bool horizontal = ((personagemJogoX + (velo * direcao) >= v1.X) && (personagemJogoX + (velo * direcao) <= v2.X)) || ((personagemJogoX + (velo * direcao) >= v2.X) && (personagemJogoX + (velo * direcao) <= v1.X));
-
-        if (vertical && horizontal)
-            return true;
-
-        return false;
-
-    }
-
     private void OnPostRender() {
 
         CreateMap();
@@ -205,6 +165,7 @@ public class GLMaps : MonoBehaviour
         Entrada.AdicionaVertices(-larguraCaminho,+larguraCaminho,0,larguraParede);
         Entrada.DefineCoordenadasIniciais(x, y);
         StartGL_Quads();
+        //GL.Color(new Color(0.177f, 0.129f, 0.073f));
         GL.Color(new Color(84/255f, 119/255f, 60/255f));
         Entrada.CriarParede();
         EndGLPopMatrix();
@@ -405,18 +366,6 @@ public class GLMaps : MonoBehaviour
 
     void BarTop(float x, float y, float z)
     {
-
-        #region Chegada
-        Parede C = new Parede();
-        C.AdicionaVertices(-21 + larguraParede + 14 - larguraCaminho, 14 - larguraParede - 20 + larguraCaminho, 35, 35 + larguraParede);
-        C.DefineCoordenadasIniciais(x, y);
-        StartGL_Quads();
-        GL.Color(new Color(177/255f, 129/255f, 73/255f));
-        C.CriarParede();
-        EndGLPopMatrix();
-        Chegada = C;
-
-        #endregion
 
         Parede p;
 

@@ -8,14 +8,12 @@ public class GLMaps : MonoBehaviour
 {
     public Material mat;
     public Vector2 sb;
-    
-    float velo = 0.1f;
+    public float velo = 0.03f;
     float direcao = 1;
     Sentido sentidoMovimentacao = Sentido.Vertical;
     private float proportion = 0.1f;
     float personagemJogoX = 0;
     float personagemJogoY = 0;
-
     public List<Parede> ParedesMapa = new List<Parede>();
     public Parede Chegada;
 
