@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GLMaps : MonoBehaviour
 {
@@ -26,13 +28,20 @@ public class GLMaps : MonoBehaviour
     float coordenadaInicialY = -3;
     float coordenadaInicialZ = 0;
 
+    float menorTempo = 0;
+    float contadorTempo = 0;
+    public TextMeshProUGUI txtTempo;
+
+
     public void Start() {
-        sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));      
+        sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        txtTempo.text = menorTempo.ToString();
     }
 
     public void FixedUpdate() {
         sb = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-       
+        contadorTempo++;        
+
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             sentidoMovimentacao = Sentido.Horizontal;
@@ -83,6 +92,14 @@ public class GLMaps : MonoBehaviour
             personagemJogoY = 0;
 
             transform.position = new Vector3(personagemJogoX, personagemJogoY, -10);
+
+            if (contadorTempo < menorTempo || menorTempo == 0)
+            {
+                menorTempo = contadorTempo;
+                txtTempo.text = menorTempo.ToString();
+            }
+            
+            contadorTempo = 0;
         }
     }
 
